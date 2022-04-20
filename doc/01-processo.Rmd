@@ -1,7 +1,7 @@
 ---
-title: "Data Mapping "
+title: "Processo"
 subtitle: "cas415"
-author: "federico.fiou@cogne.com"
+author: "simona.rollet@cogne.com"
 version: 1.0 
 date: "`r Sys.Date()`"
 output:
@@ -32,6 +32,8 @@ rm(list = ls(all.names = TRUE))
 
 require(ggplot2)
 require(dplyr)
+require(knitr)
+source('../R/function.R')
 ```
 
 ```{r esempio}
@@ -43,7 +45,14 @@ print (pl)
 
 # Introduzione
 
-I dati relativi al customer provengono dal file **Customer_dati_v1.00.csv**
+__bold__
 
-+ Chiave: codice_cliente
-+ Righe: rapa e fava
+```{r tabella}
+data2 <- data  %>%
+  head()
+cas_kable(data, 'dati')
+```
+
+
+
+
