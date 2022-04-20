@@ -36,9 +36,13 @@ rm(list = ls(all.names = TRUE))
 
 L'obiettivo del progetto consiste:
 
+1. visualizzare e misurare le derive nei test di trazione: Rm e Rp02 delle barre PEL in 415M3
+
+1. calcolare e verificare la quantità e la proporzione di fuori specifica dei valori di trazione delle barre PEL in 415M3
+
 1. identificare fra le variabili di processo quelle che hanno un impatto significativo sulle caratteristiche meccaniche a trazione delle barre PEL in 415M3
 
-2. misurare per le variabili di processo significative la misura dell'impatto
+1. misurare per le variabili di processo significative la misura dell'impatto
 
 Caratteristiche meccaniche a trazione:
 
