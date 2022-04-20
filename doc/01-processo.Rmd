@@ -30,36 +30,12 @@ knitr::opts_chunk$set(echo = FALSE,
                       cols.print=20)
 rm(list = ls(all.names = TRUE))
 
-require(ggplot2)
-require(dplyr)
-require(knitr)
-source('../R/function.R')
-```
-
-```{r esempio}
-data <- mtcars %>% select(disp,mpg)
-pl <- ggplot(data) + 
-  geom_point(aes(disp,mpg))
-print (pl)
 ```
 
 # Introduzione
 
 
-__bold__
 
-```{r tabella}
-data2 <- data  %>%
-  head()
-cas_kable(data, 'dati')
-```
-
-
-
-
-
-I dati relativi al customer provengono dal file **Customer_dati_v1.00.csv**
-  
 ## Sotto introduzione 
 
 ## sotto
