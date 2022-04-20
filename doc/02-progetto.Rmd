@@ -30,20 +30,31 @@ knitr::opts_chunk$set(echo = FALSE,
                       cols.print=20)
 rm(list = ls(all.names = TRUE))
 
-require(ggplot2)
-require(dplyr)
 ```
 
-```{r esempio}
-data <- mtcars %>% select(disp,mpg)
-pl <- ggplot(data) + 
-  geom_point(aes(disp,mpg))
-print (pl)
-```
+# Obiettivo
 
-# Introduzione
+L'obiettivo del progetto consiste:
 
-Il nostro è il gruppo più **bello** 
+1. identificare fra le variabili di processo quelle che hanno un impatto significativo sulle caratteristiche meccaniche a trazione delle barre PEL in 415M3
 
-+ Chiave: codice_cliente
-+ Righe: belli e *ganzi*
+2. misurare per le variabili di processo significative la misura dell'impatto
+
+Caratteristiche meccaniche a trazione:
+
++ Rm: carico a rottura 
++ Rp02: carico a snervamento
+
+.
+
+# Fasi
+
++ Data preparation
++ Data discovery 
++ Data modeling
++ Summary
+
+
+
+
+
