@@ -45,7 +45,7 @@ Caratteristiche meccaniche a trazione:
 + Rm: carico a rottura 
 + Rp02: carico a snervamento
 
-.
+
 
 # Fasi
 
