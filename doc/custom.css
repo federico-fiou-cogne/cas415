@@ -1,47 +1,47 @@
 #main .nav-pills > li.active > a,
 #main .nav-pills > li.active > a:hover,
 #main .nav-pills > li.active > a:focus {
-background-color: #224d98;
+background-color: #C73B1C;
   }
 
 #main .nav-pills > li > a:hover {
-background-color: #224d98;
+background-color: #C73B1C;
   }
 
 h1, h2, h3, h4, h5, h6, legend {
-  color: #224d98;
+  color: #C73B1C;
 }
 
 #nav-top span.glyphicon {
-color: #224d98;
+color: #C73B1C;
   }
 
 #table-of-contents header {
-color: #224d98;
+color: #C73B1C;
   }
 
 #main a {
-background-image: linear-gradient(180deg,#224d98,#224d98);
-                                  color: #224d98;
+background-image: linear-gradient(180deg,#C73B1C,#C73B1C);
+                                  color: #C73B1C;
                                     }
 
 a:hover {
-  color: #224d98;
+  color: #C73B1C;
 }
 
 a:visited {
-  color: #224d98;
+  color: #C73B1C;
 }
 
 #postamble {
-background:#224d98;
-  border-top:solid 10px #224d98;
+background:#C73B1C;
+  border-top:solid 10px #C73B1C;
 }
 
 #sidebar {
-background: #224d98;
+background: #C73B1C;
   }
 
 #sidebar h2 {
-background-color: #224d98;
+background-color: #C73B1C;
   }

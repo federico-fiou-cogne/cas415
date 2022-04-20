@@ -43,6 +43,8 @@ print (pl)
 
 # Introduzione
 
+![CAS](./logo.png)
+
 I dati relativi al customer provengono dal file **Customer_dati_v1.00.csv**
 
 + Chiave: codice_cliente
