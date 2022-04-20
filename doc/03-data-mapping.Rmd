@@ -32,9 +32,11 @@ rm(list = ls(all.names = TRUE))
 
 require(ggplot2)
 require(dplyr)
+require(kableExtra)
+source('../R/function.R')
 ```
 
-```{r esempio}
+```{r plot}
 data <- mtcars %>% select(disp,mpg)
 pl <- ggplot(data) + 
   geom_point(aes(disp,mpg))
@@ -43,7 +45,18 @@ print (pl)
 
 # Introduzione
 
+```{r tabella}
+
+data2 <- data %>% head()
+cas_kable(data2 , caption='tabella prova') 
+
+```
+
+![CAS](./logo.png)
+
 I dati relativi al customer provengono dal file **Customer_dati_v1.00.csv**
 
 + Chiave: codice_cliente
 + Righe: rapa e fava
+
+

@@ -45,6 +45,7 @@ print (pl)
 
 # Introduzione
 
+
 __bold__
 
 ```{r tabella}
@@ -55,4 +56,27 @@ cas_kable(data, 'dati')
 
 
 
+
+
+I dati relativi al customer provengono dal file **Customer_dati_v1.00.csv**
+  
+## Sotto introduzione 
+
+## sotto
+
+__bold__
+
+_italic_
+
+* livello 1
+  * livello 11
+* livello 2
+
++ Chiave: codice_cliente
++ Righe: rapa e fava
+
+1. uno
+1. due
+  1. due bis
+1.2 tre
 
