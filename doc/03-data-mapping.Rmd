@@ -30,33 +30,38 @@ knitr::opts_chunk$set(echo = FALSE,
                       cols.print=20)
 rm(list = ls(all.names = TRUE))
 
-require(ggplot2)
 require(dplyr)
 require(kableExtra)
-source('../R/function.R')
+require(readr)
+source('~/dev/cas415/R/function.R')
 ```
 
-```{r plot}
-data <- mtcars %>% select(disp,mpg)
-pl <- ggplot(data) + 
-  geom_point(aes(disp,mpg))
-print (pl)
+# File
+
+I file utilizati in questo progetto sono: 
+
+1. carmet415M3.txt
+1. header.csv
+
+# carmet415M3 
+
+Il file contiene tutti i dati di processo relativi alle colate 
+
+
+
+```{r caricamento_file, include = TRUE}
+header <- read_delim('/data/cas415/header.csv', delim=';', col_type=cols())
 ```
 
-# Introduzione
+Il file è composto da `r nrow(header)` colonne, con le seguenti specifiche
 
-```{r tabella}
-
-data2 <- data %>% head()
-cas_kable(data2 , caption='tabella prova') 
-
+```{r plot_tabella, include = TRUE}
+cas_kable(header, caption='header')
 ```
 
-![CAS](./logo.png)
+Il file è diviso in quatro sezioni 
 
-I dati relativi al customer provengono dal file **Customer_dati_v1.00.csv**
-
-+ Chiave: codice_cliente
-+ Righe: rapa e fava
-
-
+1. identificativo colata
+1. variabili risposta
+1. analisi chimiche finali di colata
+1. quantità materiale di carica
