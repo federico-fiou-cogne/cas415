@@ -30,29 +30,16 @@ knitr::opts_chunk$set(echo = FALSE,
                       cols.print=20)
 rm(list = ls(all.names = TRUE))
 
-```
-
-# Introduzione
 
 
 
-## Sotto introduzione 
+# Processo
 
-## sotto
+Nel corso del 2019, QPP laminazione ha rilevato che il numero di non conformita per Rm ed Rp è aumentato per l'acciaio 415M3.
 
-__bold__
+A seguito di una ragionata sulle possibili cause, si è effettuata una raccolta dati di processo.
 
-_italic_
+I dati di processo raccolti sono relativi alle analisi chimiche, finali di colata, ed ai materiali utilizzati nella costruzione della carica solida UHP AOD. 
 
-* livello 1
-  * livello 11
-* livello 2
-
-+ Chiave: codice_cliente
-+ Righe: rapa e fava
-
-1. uno
-1. due
-  1. due bis
-1.2 tre
+I dati di Rm ed Rp sono stati estratti da intranet.
 
