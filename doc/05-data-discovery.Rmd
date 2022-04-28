@@ -46,22 +46,28 @@ carmet415M3 <- read_rds('/data/cas415/carmet415M3.rds')
 
 # analisi variabili risposta
 
-analisi Rm
+analisi Rm_mean
 
 ```{r analisi rm}
 pl <- ggplot(carmet415M3)+
-  geom_line(aes(index,rm))+
-  geom_smooth(aes(index,rm),method = 'loess', se=FALSE, col='red')
+  geom_line(aes(index,Rm_mean))+
+  geom_point(aes(index,Rm_mean, color=Rm_test1))+
+  geom_smooth(aes(index,Rm_mean),method = 'loess', se=FALSE, col='red')+
+  geom_line(aes(index, Rm_center))+
+  geom_step(aes(index, Rm_usl),color='gray',alpha=.5)+
+  geom_step(aes(index, Rm_lsl),color='gray',alpha=.5)
+
   print(pl)
                        
 ```
 
-analisi Rp02
+! analisi Rp02_std
 
 ```{r analisi rp02}
-pl <- ggplot(carmet415M3)+
-  geom_line(aes(index,rp02))+
-  geom_smooth(aes(index,rp02),method = 'loess', se=FALSE, col='red')
-  print(pl)
+# pl <- ggplot(carmet415M3)+
+#   geom_line(aes(index,Rp02_mean))+
+#   geom_smooth(aes(index,Rp02_mean),method = 'loess', se=FALSE, col='red')
+#   print(pl)
                        
 ```
+
