@@ -38,36 +38,22 @@ source('~/dev/cas415/R/function.R')
 
 # File
 
-Importiamo il file header.csv
-
-
-```{r asdf}
-header <- read_delim('/data/cas415/header.csv', 
-                     delim=';',
-                     col_type=cols())
-```
-
 Ci siamo dimenticati di mettere i data type
 
 ```{r aserty}
-col_type <- paste('_cc',paste(rep('d',69),collapse = ''),sep = '')
-```
-estraiamo i colnames dall'header
-
-```{r qwerty}
-col_name <- header %>% 
-  pull(col_name)
+col_type <- paste('ic',paste(rep('d',26),collapse = ''),sep = '')
 ```
 
 leggiamo i dati 
 
 ```{r zerty}
-carmet415M3 <- read_delim('/data/cas415/carmet415M3.txt',
-                          delim = ',',
-                          skip = 1,
-                          col_names = col_name,
+carmet415M3 <- read_delim('/data/cas415/carmet_2.txt',
+                          delim = '\t',
+                          skip = 0,
+                          #col_names = col_name,
                           col_types = col_type,
-                          n_max = Inf)
+                          n_max = Inf,
+                          na = c("",-1, "NA")) #sostituire -1 con NA
 ```
 
 aggiugo indici di riga nella prima colonna

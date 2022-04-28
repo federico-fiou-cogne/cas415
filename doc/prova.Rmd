@@ -70,14 +70,6 @@ carmet415M3 <- read_delim('/data/cas415/carmet415M3.txt',
                           n_max = Inf)
 ```
 
-aggiugo indici di riga nella prima colonna
-
-```{r dsjfkwj}
-carmet415M3 <- carmet415M3 %>% 
-  mutate(index = row_number()) %>% 
-  select(index, everything())
-```
-
 contiamo le righe 
 
 ```{r serty}
@@ -88,3 +80,5 @@ salva rds
 ```{r xerty}
 write_rds(carmet415M3,'/data/cas415/carmet415M3.rds')
 ```
+
+
