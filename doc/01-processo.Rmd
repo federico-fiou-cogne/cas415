@@ -32,7 +32,6 @@ rm(list = ls(all.names = TRUE))
 
 
 
-```
 
 # Processo
 
@@ -43,3 +42,4 @@ A seguito di una ragionata sulle possibili cause, si è effettuata una raccolta 
 I dati di processo raccolti sono relativi alle analisi chimiche, finali di colata, ed ai materiali utilizzati nella costruzione della carica solida UHP AOD. 
 
 I dati di Rm ed Rp sono stati estratti da intranet.
+
