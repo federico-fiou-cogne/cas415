@@ -56,6 +56,43 @@ carmet415M3 <- read_delim('/data/cas415/carmet_2.txt',
                           na = c("",-1, "NA")) #sostituire -1 con NA
 ```
 
+
+elimino le righe dove Rm_mean < 500 perche Vincenzo ha detto che sono valori impossibili
+
+```{r hfk}
+carmet415M3 <- carmet415M3 %>% 
+  filter(Rm_mean>500)
+```
+
+ricalcolo le specifiche in base alla numerosità campionaria
+
+```{r shsg}
+usl <- 1100
+lsl <- 900
+center <- 1000
+delta2 <- (usl-lsl)/2
+carmet415M3 <- carmet415M3 %>% 
+  mutate(Rm_usl=center+delta2/sqrt(Rm_count),
+         Rm_lsl=center-delta2/sqrt(Rm_count),
+         Rm_center=center)
+```
+
+fuori specifica
+
+```{r ala}
+carmet415M3 <- carmet415M3 %>% 
+  mutate(Rm_test1=ifelse(Rm_mean>Rm_usl|Rm_mean<Rm_lsl,'failed','passed'))
+```
+
+
+riordino variabili
+
+```{r djfbs}
+carmet415M3 <- carmet415M3 %>% 
+  select(-starts_with('Rp02_')) %>% 
+  select(anno, colata, starts_with('Rm_'),everything())
+```
+
 aggiugo indici di riga nella prima colonna
 
 ```{r dsjfkwj}
@@ -70,7 +107,8 @@ contiamo le righe
 nrow(carmet415M3)
 ```
 
-salva rds 
+salva rds
+
 ```{r xerty}
 write_rds(carmet415M3,'/data/cas415/carmet415M3.rds')
 ```
