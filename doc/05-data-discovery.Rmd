@@ -31,6 +31,7 @@ knitr::opts_chunk$set(echo = TRUE,
 rm(list = ls(all.names = TRUE))
 
 require(dplyr)
+require(rlang)
 require(kableExtra)
 require(readr)
 require(ggplot2)
@@ -50,24 +51,48 @@ analisi Rm_mean
 
 ```{r analisi rm}
 pl <- ggplot(carmet415M3)+
-  geom_line(aes(index,Rm_mean))+
-  geom_point(aes(index,Rm_mean, color=Rm_test1))+
-  geom_smooth(aes(index,Rm_mean),method = 'loess', se=FALSE, col='red')+
-  geom_line(aes(index, Rm_center))+
-  geom_step(aes(index, Rm_usl),color='gray',alpha=.5)+
-  geom_step(aes(index, Rm_lsl),color='gray',alpha=.5)
+  geom_line(aes(index,rm))+
+  geom_point(aes(index,rm, color=rm_test1))+
+  geom_smooth(aes(index,rm),method = 'loess', se=FALSE, col='red')+
+  geom_line(aes(index, center))+
+  geom_step(aes(index, usl),color='gray',alpha=.5)+
+  geom_step(aes(index, lsl),color='gray',alpha=.5)
 
   print(pl)
                        
 ```
 
-! analisi Rp02_std
+analisi di correlazioni
 
-```{r analisi rp02}
-# pl <- ggplot(carmet415M3)+
-#   geom_line(aes(index,Rp02_mean))+
-#   geom_smooth(aes(index,Rp02_mean),method = 'loess', se=FALSE, col='red')
-#   print(pl)
-                       
+```{r correlazioni,results='asis'}
+response <- 'rm'
+vars <- carmet415M3 %>% 
+  select(C:rottame_430) %>%
+  names()
+
+n <- length(vars)
+
+for (i in seq_len(n)) {
+  var_i <- vars[i]
+  pl <- ggplot(carmet415M3) +
+    geom_point(aes(!!sym(var_i), !!sym(response))) +
+    geom_smooth(
+      aes(!!sym(var_i), !!sym(response)),
+      color = 'red',
+      se = FALSE,
+      method = 'loess'
+    )+
+    geom_smooth(
+      aes(!!sym(var_i), !!sym(response)),
+      color = 'green',
+      se = FALSE,
+      method='lm'
+    )
+  title <- paste('## Variabile ',var_i)  
+  cat(title,'\n')
+  cat('<BR><\\BR>','\n')
+  print(pl)
+}
 ```
+
 
