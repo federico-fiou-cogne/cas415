@@ -123,6 +123,14 @@ carmet415M3 <- carmet415M3 %>%
   filter(rm>700)
 ```
 
+aggiungiamo la colonna Nb+V
+
+```{r zdydg}
+carmet415M3 <- carmet415M3 %>% 
+mutate(sommaNbV = Nb + V) %>% 
+select(colata, scheda, rm, sommaNbV, everything())
+```
+
 fuori specifica
 
 ```{r ala}

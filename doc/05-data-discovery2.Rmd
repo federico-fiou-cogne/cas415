@@ -65,7 +65,7 @@ analisi di correlazioni
 ```{r correlazioni,results='asis'}
 response <- 'rm'
 vars <- carmet415M3 %>% 
-  select(C:N2) %>%
+  select(sommaNbV:N2) %>%
   names()
 n <- length(vars)
 
