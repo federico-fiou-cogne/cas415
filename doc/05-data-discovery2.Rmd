@@ -1,0 +1,99 @@
+---
+title: "Data Discovery "
+subtitle: "cas415"
+author: "pbrunier@cogne.com"
+version: 1.0 
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    css: ./custom.css
+    df_print: paged
+    gallery: no
+    highlight: default
+    html_document: null
+    lightbox: yes
+    number_sections: yes
+    self_contained: yes
+    thumbnails: no
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      error = FALSE,
+                      fig.height = 7,
+                      fig.width = 10,
+                      collapse = TRUE,
+                      cols.print=20)
+rm(list = ls(all.names = TRUE))
+
+require(dplyr)
+require(rlang)
+require(kableExtra)
+require(readr)
+require(ggplot2)
+source('~/dev/cas415/R/function.R')
+
+```
+
+leggiamo i dati 
+
+```{r zerty}
+carmet415M3 <- read_rds('/data/cas415/carmet415M3.rds')
+                       
+```
+
+# analisi variabili risposta
+
+analisi Rm_mean
+
+```{r analisi rm}
+pl <- ggplot(carmet415M3)+
+  geom_line(aes(index,rm))+
+  geom_point(aes(index,rm, color=rm_test1))+
+  geom_smooth(aes(index,rm),method = 'loess', se=FALSE, col='red')+
+  geom_line(aes(index, center))+
+  geom_step(aes(index, usl),color='gray',alpha=.5)+
+  geom_step(aes(index, lsl),color='gray',alpha=.5)
+
+  print(pl)
+                       
+```
+
+analisi di correlazioni
+
+```{r correlazioni,results='asis'}
+response <- 'rm'
+vars <- carmet415M3 %>% 
+  select(C:N2) %>%
+  names()
+
+n <- length(vars)
+
+for (i in seq_len(n)) {
+  var_i <- vars[i]
+  pl <- ggplot(carmet415M3) +
+    geom_point(aes(!!sym(var_i), !!sym(response))) +
+    geom_smooth(
+      aes(!!sym(var_i), !!sym(response)),
+      color = 'red',
+      se = FALSE,
+      method = 'loess'
+    )+
+    geom_smooth(
+      aes(!!sym(var_i), !!sym(response)),
+      color = 'green',
+      se = FALSE,
+      method='lm'
+    )
+  title <- paste('## Variabile ',var_i)  
+  cat(title,'\n')
+  cat('<BR><\\BR>','\n')
+  print(pl)
+}
+```
+
+
