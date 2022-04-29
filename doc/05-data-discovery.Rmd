@@ -75,23 +75,23 @@ n <- length(vars)
 for (i in seq_len(n)) {
   var_i <- vars[i]
   pl <- ggplot(carmet415M3) +
-    geom_point(aes(!!sym(var_i), !!sym(response))) +
+    geom_point(aes(!!sym(var_i),!!sym(response))) +
     geom_smooth(
-      aes(!!sym(var_i), !!sym(response)),
+      aes(!!sym(var_i),!!sym(response)),
       color = 'red',
       se = FALSE,
       method = 'loess'
-    )+
+    ) +
     geom_smooth(
-      aes(!!sym(var_i), !!sym(response)),
+      aes(!!sym(var_i),!!sym(response)),
       color = 'green',
       se = FALSE,
-      method='lm'
+      method = 'lm'
     )
-  title <- paste('## Variabile ',var_i)  
-  cat(title,'\n')
-  cat('<BR><\\BR>','\n')
+  title <- paste('## Variabile: ', var_i)
+  cat(title, '\n')
   print(pl)
+  cat('<p>') #necessario per terminare paragrafo
 }
 ```
 
