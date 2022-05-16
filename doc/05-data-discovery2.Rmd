@@ -44,7 +44,7 @@ carmet415M3 <- read_rds('/data/cas415/carmet415M3.rds')
                        
 ```
 
-# analisi variabili risposta
+# Analisi della variabile risposta (Rm)
 
 analisi Rm_mean
 
@@ -59,6 +59,34 @@ pl <- ggplot(carmet415M3)+
   print(pl)
                        
 ```
+
+
+# Analisi delle variabili input (chimica)
+
+analisi chimica nel tempo
+
+```{r chim_temp, results='asis'}
+vars <- carmet415M3 %>%
+  select(sommaNbV:N2) %>%
+  names()
+titles <- paste('## Andamento nel tempo della variabile ', vars)
+
+n <- length(vars)
+
+for (i in seq_len(n)) {
+  var_i <- vars[i]
+  title_i <- titles[i]
+  pl <- ggplot(carmet415M3)+
+    geom_line(aes(index,!!sym(var_i)))+
+                geom_smooth(aes(index,!!sym(var_i)),method = 'loess', se=FALSE, col='red')
+              
+              cat(title_i, '\n')
+              print(pl)
+              cat('<p>')
+}                     
+```
+
+# Analisi delle correlazioni variabili input VS variabile risposta (Rm)
 
 analisi di correlazioni
 
