@@ -61,13 +61,13 @@ pl <- ggplot(carmet415M3)+
 ```
 
 
-# Analisi delle variabili input (chimica)
+# Analisi delle variabili input (chimica + carica)
 
 analisi chimica nel tempo
 
 ```{r chim_temp, results='asis'}
 vars <- carmet415M3 %>%
-  select(sommaNbV:N2) %>%
+  select(sommaNbV:sfrido_molaggio_inox) %>%
   names()
 titles <- paste('## Andamento nel tempo della variabile ', vars)
 
@@ -93,7 +93,7 @@ analisi di correlazioni
 ```{r correlazioni,results='asis'}
 response <- 'rm'
 vars <- carmet415M3 %>% 
-  select(sommaNbV:N2) %>%
+  select(sommaNbV:sfrido_molaggio_inox) %>%
   names()
 n <- length(vars)
 
@@ -119,4 +119,70 @@ for (i in seq_len(n)) {
   cat('<p>') #necessario per terminare paragrafo
 }
 ```
+
+
+
+
+Ripeto gli stessi passaggi sul database che considera solo il valore medio di Rm per colata
+
+
+leggiamo i dati 
+
+```{r hgfd}
+carmet415M3 <- read_rds('/data/cas415/carmet415M3colata.rds')
+                       
+```
+
+# Analisi della variabile risposta (media di Rm per colata)
+
+analisi Rm_mean
+
+```{r analisi rm medio}
+pl <- ggplot(carmet415M3)+
+  geom_line(aes(index,rm_medio))+
+  geom_point(aes(index,rm_medio, color=rm_test1))+
+  geom_smooth(aes(index,rm_medio),method = 'loess', se=FALSE, col='red')+
+  geom_line(aes(index, center))+
+  geom_step(aes(index, usl),color='gray',alpha=.5)+
+  geom_step(aes(index, lsl),color='gray',alpha=.5)
+  print(pl)
+                       
+```
+
+
+
+# Singola colata: Analisi delle correlazioni variabili input VS variabile risposta (media di Rm per colata)
+
+analisi di correlazioni
+
+```{r correlazioni Rm medio,results='asis'}
+response <- 'rm_medio'
+vars <- carmet415M3 %>% 
+  select(sommaNbV:sfrido_molaggio_inox) %>%
+  names()
+n <- length(vars)
+
+for (i in seq_len(n)) {
+  var_i <- vars[i]
+  pl <- ggplot(carmet415M3) +
+    geom_point(aes(!!sym(var_i),!!sym(response))) +
+    geom_smooth(
+      aes(!!sym(var_i),!!sym(response)),
+      color = 'red',
+      se = FALSE,
+      method = 'loess'
+    ) +
+    geom_smooth(
+      aes(!!sym(var_i),!!sym(response)),
+      color = 'green',
+      se = FALSE,
+      method = 'lm'
+    )
+  title <- paste('## Variabile: ', var_i)
+  cat(title, '\n')
+  print(pl)
+  cat('<p>') #necessario per terminare paragrafo
+}
+```
+
 
