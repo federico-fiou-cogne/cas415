@@ -29,17 +29,16 @@ knitr::opts_chunk$set(echo = FALSE,
                       collapse = TRUE,
                       cols.print=20)
 rm(list = ls(all.names = TRUE))
-
+```
 
 
 
 # Processo
 
-Nel corso del 2019, QPP laminazione ha rilevato che il numero di non conformita per Rm ed Rp è aumentato per l'acciaio 415M3.
+Nel corso del 2019, QPP laminazione ha rilevato un incremento delle caratteristiche meccaniche sulla marca interna **415M3**. Questo risulta essere problematico per alcuni clienti nel momento in cui viene trafilato in quanto si assiste ad un'ulteriore incremento di tali caratteristiche (Rm, Rp02) con successivo rischio di non conformità.  
 
-A seguito di una ragionata sulle possibili cause, si è effettuata una raccolta dati di processo.
+A seguito di una ragionata sulle possibili cause, si è effettuata una raccolta dati di processo. In questo specifico caso, si lavora su una popolazione di dati che fa riferimento alle **barre PEL**. 
 
-I dati di processo raccolti sono relativi alle analisi chimiche, finali di colata, ed ai materiali utilizzati nella costruzione della carica solida UHP AOD. 
+I dati di processo raccolti sono relativi alle analisi chimiche, finali di colata, ed ai materiali utilizzati nella costruzione della carica solida UHP AOD. *Verranno pertanto trascurati i parametri di processo a valle del colaggio in CCO*. 
 
-I dati di Rm ed Rp sono stati estratti da intranet.
-
+I dati di Rm ed Rp sono stati estratti da intranet e fanno riferimento alle schede. Il numero di schede per colata **NON** è omogeneo. 

@@ -42,11 +42,14 @@ I file utilizati in questo progetto sono:
 
 1. carmet415M3.txt
 1. header.csv
+1. Rm_415m3_schede.csv
 
-# carmet415M3 
+## carmet415M3 
 
-Il file contiene tutti i dati di processo relativi alle colate 
+Il file contiene tutti i dati di processo relativi alle colate presi da:
 
++ APC (rcchim01)
++ cariche (inquery)
 
 
 ```{r caricamento_file, include = TRUE}
@@ -65,3 +68,12 @@ Il file è diviso in quatro sezioni
 1. variabili risposta
 1. analisi chimiche finali di colata
 1. quantità materiale di carica
+
+## Rm_415m3_schede
+
+Il file contiene i dati delle prove meccaniche (Rm, Rp02) per scheda. Presi da intranet. Le schede fanno riferimento alle colate di carmet415. 
+
+Data la struttura iniziale del report intranet i dati sono stati preprocessati pivotando gli originali.  
+
+*La verifica dei dati (duplicati, valori mancanti o sbagliati, ...) non è ancora stata fatta*
+
