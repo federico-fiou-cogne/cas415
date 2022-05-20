@@ -36,18 +36,21 @@ rm(list = ls(all.names = TRUE))
 
 L'obiettivo del progetto consiste:
 
-1. identificare fra le variabili di processo quelle che hanno un impatto significativo sulle caratteristiche meccaniche a trazione delle barre PEL in 415M3
+1. identificare fra le variabili di processo quelle che hanno un impatto significativo sulle caratteristiche meccaniche a trazione delle barre PEL in 415M3.
 
-2. misurare per le variabili di processo significative la misura dell'impatto
+2. misurare per le variabili di processo significative la misura dell'impatto.
 
-Caratteristiche meccaniche a trazione:
-
-+ Rm: carico a rottura 
-+ Rp02: carico a snervamento
+3. costruire un modello che permetta stimare le caratteristische meccaniche in funzione di tale variabile, evidenziandone i limiti  
 
 
+Caratteristiche meccaniche:
 
-# Fasi
++ Rm: carico a rottura [MPa] 
++ Rp02: carico a snervamento [MPa]
+
+
+
+# Fasi del progetto
 
 + Data preparation
 + Data discovery 

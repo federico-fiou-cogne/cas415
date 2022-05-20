@@ -35,10 +35,18 @@ rm(list = ls(all.names = TRUE))
 
 # Processo
 
-Nel corso del 2019, QPP laminazione ha rilevato un incremento delle caratteristiche meccaniche sulla marca interna **415M3**. Questo risulta essere problematico per alcuni clienti nel momento in cui viene trafilato in quanto si assiste ad un'ulteriore incremento di tali caratteristiche (Rm, Rp02) con successivo rischio di non conformità.  
+Nel corso del 2019, QPP laminazione ha rilevato un incremento delle caratteristiche meccaniche sulla marca interna **415M3**. Questo risulta essere problematico per alcuni clienti nel momento in cui viene trafilato in quanto si assiste ad un'ulteriore incremento di tali caratteristiche (*Rm, Rp02*) con successivo rischio di non conformità.  
 
-A seguito di una ragionata sulle possibili cause, si è effettuata una raccolta dati di processo. In questo specifico caso, si lavora su una popolazione di dati che fa riferimento alle **barre PEL**. 
+A seguito di tale evento è iniziata una raccolta dei dati di processo. In questo specifico caso, si lavora su una popolazione di dati che fa riferimento alle **barre PEL**. 
 
-I dati di processo raccolti sono relativi alle analisi chimiche, finali di colata, ed ai materiali utilizzati nella costruzione della carica solida UHP AOD. *Verranno pertanto trascurati i parametri di processo a valle del colaggio in CCO*. 
+I dati di processo raccolti sono relativi alle analisi chimiche, finali di colata, ed ai materiali utilizzati nella costruzione della carica solida UHP AOD. *Verranno pertanto trascurati i parametri di processo a valle del colaggio in CCO, perché rituenuti ininfluenti sulle variabili di risposta*. 
 
-I dati di Rm ed Rp sono stati estratti da intranet e fanno riferimento alle schede. Il numero di schede per colata **NON** è omogeneo. 
+I dati di Rm ed Rp sono stati estratti da intranet e fanno riferimento alle schede testate. Il numero di schede per colata **NON** è omogeneo. 
+
+Per riassumere i dati di processo:
+
++ Ogni carica UHP ha una composizione speficica in termini di rottame.
+
++ Ogni colata AOD eredita una carica UHP
+
++ Una colata AOD genera N schede
