@@ -129,20 +129,38 @@ griglia dei valori
 
 ```{r grid}
 
-d <- tibble(
-V = seq(0,0.1,length=20),
-Nb = seq(0,0.03,length=20),
-P = seq(0,0.028,length=20),
-Ni = seq(4.45,4.65,length=20),
-Cu = seq(0,0.3,length=20))
+require(tidyr)
 
-d <- d %>% expand.grid()
+d <- expand_grid(
+V = seq(0.03,0.1,length=4),
+Nb = seq(0.01,0.03,length=10),
+P = seq(0.018,0.028,length=4),
+Ni = seq(4.45,4.65,length=10),
+Cu = seq(0.15,0.3,length=4))
+
+
+
+# d <- d %>% expand.grid()
 d_prd <- predict(fm_lm1,d,interval='prediction') %>% 
   as_tibble()
 
 d <- d %>% bind_cols(d_prd)
 
-d <- d %>% mutate(test=fit-1000)
+# d <- d %>% mutate(test=fit-1000)
 
-d %>%  filter(abs(test)==min(abs(test)))
+# d %>%  filter(abs(test)==min(abs(test)))
 ```
+
+plot variabili principali
+
+```{r dcasc}
+
+# ggplot(d, aes(V, Cu)) + geom_contour(aes(z=fit))
+
+ggplot(d, aes(Nb, fit)) +
+  geom_smooth(aes(group =factor(P), color=factor(P)), method='lm') +
+  geom_point(aes(color=factor(P))) + 
+  facet_grid(Cu~V, labeller = label_both)
+
+```
+
