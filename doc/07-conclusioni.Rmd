@@ -32,15 +32,27 @@ rm(list = ls(all.names = TRUE))
 
 ```
 
-# Obiettivo
+# Conclusioni
 
 L'obiettivo del progetto consiste:
 
 1. identificare fra le variabili di processo quelle che hanno un impatto significativo sulle caratteristiche meccaniche a trazione delle barre PEL in 415M3.
 
+Le variabili sono:
+  1
+    2
+      3
+
 2. misurare per le variabili di processo significative la misura dell'impatto.
 
+I valori T per le singole variabili sono:
+  1
+    2
+      3
+
 3. costruire un modello che permetta stimare le caratteristische meccaniche in funzione di tale variabile, evidenziandone i limiti  
+
+Spiegare passagio da albero a modello lineare
 
 
 Caratteristiche meccaniche:
