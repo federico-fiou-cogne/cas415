@@ -125,3 +125,24 @@ carmet415M3_model %>%
   pairs()
   
 ```
+griglia dei valori
+
+```{r grid}
+
+d <- tibble(
+V = seq(0,0.1,length=20),
+Nb = seq(0,0.03,length=20),
+P = seq(0,0.028,length=20),
+Ni = seq(4.45,4.65,length=20),
+Cu = seq(0,0.3,length=20))
+
+d <- d %>% expand.grid()
+d_prd <- predict(fm_lm1,d,interval='prediction') %>% 
+  as_tibble()
+
+d <- d %>% bind_cols(d_prd)
+
+d <- d %>% mutate(test=fit-1000)
+
+d %>%  filter(abs(test)==min(abs(test)))
+```
