@@ -3,4 +3,5 @@
 .RData
 .Ruserdata
 doc/*.html
+doc/trash/*.html
 *.Rproj
