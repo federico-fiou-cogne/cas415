@@ -36,7 +36,7 @@ require(readr)
 source('~/dev/cas415/R/function.R')
 ```
 
-# File
+# Dati per scheda
 
 Importiamo il file header.csv
 
@@ -45,6 +45,8 @@ Importiamo il file header.csv
 header <- read_delim('/data/cas415/header.csv', 
                      delim=';',
                      col_type=cols())
+
+
 ```
 
 Ci siamo dimenticati di mettere i data type
@@ -62,12 +64,94 @@ col_name <- header %>%
 leggiamo i dati 
 
 ```{r zerty}
-carmet415M3 <- read_delim('/data/cas415/carmet415M3.txt',
+carmet415M3_chimiche <- read_delim('/data/cas415/carmet415M3.txt',
                           delim = ',',
                           skip = 1,
                           col_names = col_name,
                           col_types = col_type,
                           n_max = Inf)
+
+```
+
+prendiamo soltanto le colate con le relative chimiche e cariche
+
+```{r rty}
+carmet415M3_chimiche <- carmet415M3_chimiche %>% 
+  select(colata,C:sfrido_molaggio_inox) 
+
+colate_d <-carmet415M3_chimiche %>% 
+  group_by(colata) %>% 
+  count() %>% 
+  filter(n > 1) %>% 
+  pull(colata)
+
+carmet415M3_chimiche <- carmet415M3_chimiche %>% 
+  filter(!c(colata %in% colate_d)) %>% 
+  arrange(colata)
+
+```
+
+leggiamo i dati delle schede
+
+```{r zty}
+carmet415M3_schede <- read_delim('/data/cas415/Rm_415m3_schede.csv',
+                          delim = ';',
+                          skip = 0,
+                          #col_names = col_name,
+                          col_types = 'cdc',
+                          n_max = Inf,
+                          na = c("",-1, "NA")) #sostituire -1 con NA
+```
+
+uniamo i due dataset
+
+```{r ztfddy}
+carmet415M3 <- carmet415M3_chimiche %>% 
+  left_join(carmet415M3_schede,by='colata') %>% 
+  select(colata,scheda,rm,everything())
+```
+
+verifichiamo il join
+
+```{r ztfdy}
+carmet415M3 <- carmet415M3  %>% 
+  filter(!is.na(rm))
+```
+
+eliminiamo valori inferiori a 700
+
+```{r zdy}
+carmet415M3 <- carmet415M3 %>% 
+  filter(rm>700)
+```
+
+aggiungiamo la colonna Nb+V
+
+```{r zdydg}
+carmet415M3 <- carmet415M3 %>% 
+mutate(sommaNbV = Nb + V) %>% 
+select(colata, scheda, rm, sommaNbV, everything())
+```
+
+fuori specifica
+
+```{r ala}
+lsl <- 900
+usl <- 1100
+center <- 1000
+carmet415M3 <- carmet415M3 %>% 
+  mutate(rm_test1=ifelse(rm>usl|rm<lsl,'failed','passed'),
+         usl=1100,
+         lsl=900,
+         center=1000)
+```
+
+
+riordino variabili
+
+```{r djfbs}
+carmet415M3 <- carmet415M3 %>% 
+  select(colata,scheda,rm,rm_test1,everything())
 ```
 
 aggiugo indici di riga nella prima colonna
@@ -78,13 +162,71 @@ carmet415M3 <- carmet415M3 %>%
   select(index, everything())
 ```
 
-contiamo le righe 
+contiamo le righe carmet415M3, carmet415M3_chimiche, carmet415M3_schede
 
 ```{r serty}
 nrow(carmet415M3)
+nrow(carmet415M3_chimiche)
+nrow(carmet415M3_schede)
 ```
 
-salva rds 
+salva rds
+
 ```{r xerty}
 write_rds(carmet415M3,'/data/cas415/carmet415M3.rds')
+```
+
+
+
+
+# Dati per colata (Rm medio)
+
+```{r}
+carmet415M3col <- carmet415M3 %>% 
+  group_by(colata) %>% 
+  mutate(rm_medio = mean(rm), rm_sd = sd(rm)) %>% 
+  select(-index, -rm, -rm_test1, -scheda, -usl, -lsl, -center) %>% 
+  select(colata, rm_medio, rm_sd, everything()) %>% 
+  unique() %>% 
+  ungroup()
+
+```
+
+
+fuori specifica
+
+```{r ahla}
+lsl <- 900
+usl <- 1100
+center <- 1000
+carmet415M3col <- carmet415M3col %>% 
+  mutate(rm_test1=ifelse(rm_medio>usl|rm_medio<lsl,'failed','passed'),
+         usl=1100,
+         lsl=900,
+         center=1000)
+```
+
+
+riordino variabili
+
+```{r djhfbs}
+carmet415M3col <- carmet415M3col %>% 
+  select(colata,rm_medio,rm_test1,everything())
+```
+
+aggiugo indici di riga nella prima colonna
+
+```{r dsjfhkwj}
+carmet415M3col <- carmet415M3col %>% 
+  mutate(index = row_number()) %>% 
+  select(index, everything())
+
+```
+
+
+
+salva rds
+
+```{r xehrty}
+write_rds(carmet415M3col,'/data/cas415/carmet415M3colata.rds')
 ```
