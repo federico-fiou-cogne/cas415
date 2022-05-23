@@ -31,6 +31,7 @@ knitr::opts_chunk$set(echo = TRUE,
 rm(list = ls(all.names = TRUE))
 require(dplyr)
 require(rlang)
+require(tidyr)
 require(kableExtra)
 require(readr)
 require(ggplot2)
@@ -129,38 +130,54 @@ griglia dei valori
 
 ```{r grid}
 
-require(tidyr)
+d <- carmet415M3
 
 d <- expand_grid(
-V = seq(0.03,0.1,length=4),
-Nb = seq(0.01,0.03,length=10),
-P = seq(0.018,0.028,length=4),
-Ni = seq(4.45,4.65,length=10),
-Cu = seq(0.15,0.3,length=4))
+V = seq(min(d$V),max(d$V),length=4),
+Nb = seq(min(d$Nb),max(d$Nb),length=10),
+P = seq(min(d$P),max(d$P),length=4),
+Ni = seq(min(d$Ni),max(d$Ni),length=10),
+Cu = seq(min(d$Cu),max(d$Cu),length=4))
 
 
-
-# d <- d %>% expand.grid()
 d_prd <- predict(fm_lm1,d,interval='prediction') %>% 
   as_tibble()
 
 d <- d %>% bind_cols(d_prd)
 
-# d <- d %>% mutate(test=fit-1000)
-
-# d %>%  filter(abs(test)==min(abs(test)))
 ```
 
 plot variabili principali
 
 ```{r dcasc}
 
-# ggplot(d, aes(V, Cu)) + geom_contour(aes(z=fit))
-
 ggplot(d, aes(Nb, fit)) +
-  geom_smooth(aes(group =factor(P), color=factor(P)), method='lm') +
+  geom_smooth(aes(group =factor(P), color=factor(P)), method='lm', se=F) +
   geom_point(aes(color=factor(P))) + 
   facet_grid(Cu~V, labeller = label_both)
 
 ```
 
+Test per Vincenzo
+
+```{r grid2}
+
+d <- carmet415M3
+
+d <- tibble(
+V = 0.10,
+Nb = 0.03,
+P = mean(d$P),
+Ni = 4.5,
+Cu = mean(d$Cu))
+
+
+d_prd <- predict(fm_lm1,d,interval='prediction') %>% 
+  as_tibble()
+
+d <- d %>% bind_cols(d_prd)
+
+d <- d %>% mutate(test=fit-970)
+
+d %>%  filter(abs(test)==min(abs(test)))
+```
