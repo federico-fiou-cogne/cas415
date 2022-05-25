@@ -184,9 +184,9 @@ write_rds(carmet415M3,'/data/cas415/carmet415M3.rds')
 ```{r}
 carmet415M3col <- carmet415M3 %>% 
   group_by(colata) %>% 
-  mutate(rm_medio = mean(rm), rm_sd = sd(rm)) %>% 
+  mutate(rm_medio = mean(rm), rm_sd = sd(rm), n=n()) %>% 
   select(-index, -rm, -rm_test1, -scheda, -usl, -lsl, -center) %>% 
-  select(colata, rm_medio, rm_sd, everything()) %>% 
+  select(colata, rm_medio, rm_sd, n, everything()) %>% 
   unique() %>% 
   ungroup()
 
