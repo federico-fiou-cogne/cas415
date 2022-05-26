@@ -157,6 +157,7 @@ analisi di correlazioni
 
 ```{r correlazioni Rm medio,results='asis'}
 response <- 'rm_medio'
+sd <- 'rm_sd'
 vars <- carmet415M3 %>% 
   select(sommaNbV:sfrido_molaggio_inox) %>%
   names()
@@ -164,8 +165,8 @@ n <- length(vars)
 
 for (i in seq_len(n)) {
   var_i <- vars[i]
-  pl <- ggplot(carmet415M3) +
-    geom_point(aes(!!sym(var_i),!!sym(response))) +
+  pl <- ggplot(carmet415M3,aes(!!sym(var_i),!!sym(response))) +
+    geom_point() +
     geom_smooth(
       aes(!!sym(var_i),!!sym(response)),
       color = 'red',
@@ -177,7 +178,9 @@ for (i in seq_len(n)) {
       color = 'green',
       se = FALSE,
       method = 'lm'
-    )
+    ) +
+    geom_errorbar(aes(ymin=!!sym(response)-!!sym(sd), ymax=!!sym(response)+!!sym(sd)), width=.0001,
+                 position=position_dodge(.01), colour = 'red', linetype = 'longdash') 
   title <- paste('## Variabile: ', var_i)
   cat(title, '\n')
   print(pl)
