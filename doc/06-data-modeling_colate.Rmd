@@ -1,0 +1,446 @@
+---
+title: "Data Modeling su dataset colate"
+subtitle: "cas415. La variabile risposta rm è considerata come valore medio per colata."
+author: "pbrunier@cogne.com"
+version: 1.0 
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    css: ./custom.css
+    df_print: paged
+    gallery: no
+    highlight: default
+    html_document: null
+    lightbox: yes
+    number_sections: yes
+    self_contained: yes
+    thumbnails: no
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      error = FALSE,
+                      fig.height = 7,
+                      fig.width = 10,
+                      collapse = TRUE,
+                      cols.print=20)
+rm(list = ls(all.names = TRUE))
+require(dplyr)
+require(rlang)
+require(tidyr)
+require(kableExtra)
+require(readr)
+require(ggplot2)
+require(rpart)
+require(rpart.plot)
+source('~/dev/cas415/R/function.R')
+```
+
+leggiamo i dati del file contenente solo le colate con il valore di rm medio
+
+```{r loading}
+carmet415M3 <- read_rds('/data/cas415/carmet415M3colata.rds')
+                       
+```
+
+```{r cleaning delle variabili}
+carmet415M3_model <- carmet415M3 %>% 
+  select(-c(index,colata,rm_test1,rm_sd, sommaNbV))
+
+```
+
+# No WEIGHTS
+Gli algoritmi decision tree e linear model sono utilizzati *senza* il parametro weights
+
+## Albero di regressione (variabile risposta continua rm_medio)
+
+albero Rm_mean 
+
+```{r alberonow}
+fm <- rpart(formula=rm_medio ~ .,
+            data = carmet415M3_model,
+            method = 'anova',
+            cp = 0.04)
+```
+
+plot dell'albero 
+
+```{r plotnow}
+rpart.plot(fm,
+           extra=101)
+
+```
+
+```{r printnow}
+print(fm)
+
+```
+
+## Regressione lineare
+
+troviamo un modello lineare con le variabili indicate dall'albero considerando anche le interazioni di grado 2. 
+
+```{r linear model now}
+fm_lm <- lm(rm_medio ~ (V+ Nb)^2,
+            data = carmet415M3_model)
+
+summary(fm_lm)
+
+```
+
+testiamo il modello ad interazioni ridotte
+
+```{r  testi modello now}
+fm_lm1 <- lm(rm_medio ~ V+ Nb,
+            data = carmet415M3_model)
+
+summary(fm_lm1)
+```
+
+faccio una anova per i due modelli, con ipotesi nulla *i due modelli sono diversi*
+
+```{r anova now}
+anova(fm_lm1,fm_lm,test='F')
+
+```
+
+### Verifica del modello
+
+verifico il modello
+
+```{r verifica now}
+par(mfrow=c(2,2))
+plot(fm_lm1)
+par(mfrow=c(1,1))
+
+```
+
+plot residui VS singole variabili
+
+```{r residui now}
+carmet415M3_model %>% 
+  select(V,Nb) %>% 
+  mutate(res=residuals(fm_lm1)) %>% 
+  pairs()
+  
+```
+griglia dei valori
+
+```{r grid now}
+d <- carmet415M3
+
+d <- expand_grid(
+V = seq(min(d$V),max(d$V),length=10),
+Nb = seq(min(d$Nb),max(d$Nb),length=4))
+
+d_prd <- predict(fm_lm1,d,interval='prediction') %>% 
+  as_tibble()
+
+d <- d %>% bind_cols(d_prd)
+
+```
+
+### Plot variabili principali
+
+```{r dcasc now}
+ggplot(d, aes(Nb, fit)) +
+  geom_smooth(aes(group =factor(V), color=factor(V)), method='lm', se=F)
+
+```
+
+
+
+# WEIGHTS con numerosità campionaria (n)
+
+Gli algoritmi decision tree e linear model sono utilizzati con il parametro weights = n
+
+## Albero di regressione (variabile risposta continua rm_medio)
+
+albero Rm_mean pesato sulla numerosità campionaria
+
+```{r albero}
+fm <- rpart(formula=rm_medio ~ .,
+            data = carmet415M3_model,
+            method = 'anova',
+            cp = 0.04, weights = carmet415M3$n)
+```
+
+plot dell'albero 
+
+```{r plot}
+rpart.plot(fm,
+           extra=101)
+
+```
+
+```{r print}
+print(fm)
+
+```
+
+## Regressione lineare
+
+troviamo un modello lineare con le variabili indicate dall'albero considerando anche le interazioni di grado 2. Peso sulla numerosità campionaria.
+
+```{r linear model}
+fm_lm <- lm(rm_medio ~ (V+ Nb+ Cu)^2,
+            data = carmet415M3_model, weights = carmet415M3$n)
+
+summary(fm_lm)
+
+```
+
+testiamo il modello ad interazioni ridotte
+
+```{r  testi modello}
+fm_lm1 <- lm(rm_medio ~ V+ Nb+ Cu+ Nb:Cu+ V:Cu,
+            data = carmet415M3_model, weights = carmet415M3$n)
+
+summary(fm_lm1)
+```
+
+faccio una anova per i due modelli, con ipotesi nulla *i due modelli sono diversi*
+
+```{r anova}
+anova(fm_lm1,fm_lm,test='F')
+
+```
+
+### Verifica del modello
+
+verifico il modello
+
+```{r verifica}
+par(mfrow=c(2,2))
+plot(fm_lm1)
+par(mfrow=c(1,1))
+
+```
+
+plot residui VS singole variabili
+
+```{r residui}
+carmet415M3_model %>% 
+  select(V,Nb,Cu) %>% 
+  mutate(res=residuals(fm_lm1)) %>% 
+  pairs()
+  
+```
+griglia dei valori
+
+```{r grid}
+d <- carmet415M3
+
+d <- expand_grid(
+V = seq(min(d$V),max(d$V),length=10),
+Nb = seq(min(d$Nb),max(d$Nb),length=4),
+Cu = seq(min(d$Cu),max(d$Cu),length=4))
+
+d_prd <- predict(fm_lm1,d,interval='prediction') %>% 
+  as_tibble()
+
+d <- d %>% bind_cols(d_prd)
+
+```
+
+### Plot variabili principali
+
+```{r dcasc}
+ggplot(d, aes(V, fit)) +
+  geom_smooth(aes(group =factor(Nb), color=factor(Nb)), method='lm', se=F) +
+  facet_grid(~Cu, labeller = label_both)
+
+```
+
+Test per Vincenzo
+
+```{r grid21}
+d <- carmet415M3
+
+d <- tibble(
+V = 0.10,
+Nb = 0.03,
+P = mean(d$P),
+Ni = 4.5,
+Cu = mean(d$Cu))
+
+d_prd <- predict(fm_lm1,d,interval='prediction') %>% 
+  as_tibble()
+
+d <- d %>% bind_cols(d_prd)
+
+d <- d %>% mutate(test=fit-970)
+
+d %>%  filter(abs(test)==min(abs(test)))
+```
+
+# WEIGHTS con reciproco della deviazione standard (1/rm_sd)
+
+Gli algoritmi decision tree e linear model sono utilizzati con il parametro weights=1/rm_sd
+
+Valutiamo la distribuzione di n e sd e la dipendenza di sd da n
+
+```{r  caratterizzo sd}
+carmet415M3 %>% 
+  ggplot(aes(n)) +
+  geom_histogram()
+
+carmet415M3 %>% 
+  ggplot(aes(rm_sd)) + 
+  geom_histogram()
+
+carmet415M3 %>% 
+  ggplot(aes(n, rm_sd)) +
+  geom_point()
+
+```
+
+leggiamo i dati del file contenente solo le colate con il valore di rm medio
+
+```{r loading2}
+
+carmet415M3 <- read_rds('/data/cas415/carmet415M3colata.rds')
+                       
+```
+
+Pesando su 1/rm_sd dò più importanza alle colate con valori simili di rm su schede diverse (basso sd), quindi il valore di rm sarà verosimilmente più legato all'effetto della chimica piuttosto che all'effetto dei processi a valle.
+Come devo comportarmi con le colate con un solo valore di rm?
+Provo a non considerarle, visto che ne restano ancora 82.
+
+```{r c}
+
+#elimino colate con sd=NA
+carmet415M3 <- na.omit(carmet415M3)
+
+```
+
+
+```{r cleaning delle variabili2}
+carmet415M3_model <- carmet415M3 %>% 
+  select(-c(index,colata,rm_test1, sommaNbV)) %>% 
+  filter(rm_sd != 0)
+
+```
+## Albero di regressione (variabile risposta continua rm_medio)
+
+albero Rm_mean pesato su 1/rm_sd
+
+```{r albero2}
+fm <- rpart(formula=rm_medio ~ .,
+            data = carmet415M3_model,
+            method = 'anova',
+            cp = 0.08, weights = 1/carmet415M3_model$rm_sd)
+```
+
+plot dell'albero 
+
+```{r plot2}
+rpart.plot(fm,
+           extra=101)
+
+```
+
+```{r print2}
+print(fm)
+
+```
+
+## Regressione lineare
+
+troviamo un modello lineare con le variabili indicate dall'albero considerando anche le interazioni di grado 2. Peso su 1/rm_sd.
+
+```{r linear model2}
+fm_lm <- lm(rm_medio ~ (V+ Nb)^2,
+            data = carmet415M3_model, weights = 1/carmet415M3_model$rm_sd)
+
+summary(fm_lm)
+
+```
+
+testiamo il modello ad interazioni ridotte
+
+```{r  test modello2}
+fm_lm1 <- lm(sqrt(rm_medio) ~ V+ Nb,
+            data = carmet415M3_model, weights = 1/carmet415M3_model$rm_sd)
+
+
+summary(fm_lm1)
+```
+
+faccio una anova per i due modelli, con ipotesi nulla *i due modelli sono diversi*
+
+```{r anova2}
+anova(fm_lm1,fm_lm,test='F')
+
+```
+
+### Verifica del modello
+
+verifico il modello
+
+```{r verifica2}
+par(mfrow=c(2,2))
+plot(fm_lm1)
+par(mfrow=c(1,1))
+
+```
+
+plot residui VS singole variabili
+
+```{r residui2}
+carmet415M3_model %>% 
+  select(V,Nb) %>% 
+  mutate(res=residuals(fm_lm1)) %>% 
+  pairs()
+  
+```
+griglia dei valori
+
+```{r grid2}
+d <- carmet415M3
+
+d <- expand_grid(
+V = seq(min(d$V),max(d$V),length=5),
+Nb = seq(min(d$Nb),max(d$Nb),length=10))
+
+d_prd <- predict(fm_lm1,d,interval='prediction') %>% 
+  as_tibble()
+
+d <- d %>% bind_cols(d_prd)
+
+```
+
+
+### Plot variabili principali
+
+```{r dcagsc}
+ggplot(d, aes(Nb, fit)) +
+  geom_smooth(aes(group =factor(V), color=factor(V)), method='lm', se=F) +
+  geom_point(aes(color=factor(V))) 
+  
+```
+
+### Visualizzo boxplot dei dati reali
+
+divido in categorie 'alto' e 'basso' in base ai valori visualizzati nell'albero
+
+```{r prova}
+carmet415M3_model <- carmet415M3_model %>% 
+  mutate(testV = case_when(V <0.049 ~ 'V basso',
+         V >= 0.049 ~ 'V alto'),
+         testNb = case_when(Nb <0.022 ~ 'Nb basso',
+         Nb >= 0.022 ~ 'Nb alto'))
+
+ggplot(carmet415M3_model, aes(rm_medio)) +
+  geom_boxplot() +
+  facet_grid(testV~testNb) +
+  coord_flip()
+
+```
+
+
+
