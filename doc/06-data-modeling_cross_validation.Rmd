@@ -1,0 +1,141 @@
+---
+title: "Data Modeling"
+subtitle: "cas415"
+author: "pbrunier@cogne.com"
+version: 1.0 
+date: "`r Sys.Date()`"
+output:
+  rmdformats::readthedown:
+    css: ./custom.css
+    df_print: paged
+    gallery: no
+    highlight: default
+    html_document: null
+    lightbox: yes
+    number_sections: yes
+    self_contained: yes
+    thumbnails: no
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      error = FALSE,
+                      fig.height = 7,
+                      fig.width = 10,
+                      collapse = TRUE,
+                      cols.print=20)
+rm(list = ls(all.names = TRUE))
+require(dplyr)
+require(rlang)
+require(tidyr)
+require(kableExtra)
+require(readr)
+require(ggplot2)
+require(rpart)
+require(rpart.plot)
+source('~/dev/cas415/R/function.R')
+```
+
+leggiamo i dati 
+
+```{r loading}
+carmet415M3 <- read_rds('/data/cas415/carmet415M3.rds')
+                       
+```
+
+```{r cleaning delle variabili}
+carmet415M3_model <- carmet415M3 %>% 
+  select(-c(index,colata,scheda,rm_test1,sommaNbV))
+```
+
+troviamo un modello lineare con le variabili indicate dall'albero considerando anche le interazioni di grado 2
+
+xxx
+testiamo il modello ad interazioni ridotte
+
+```{r  testi modello}
+
+fm_lm1 <- lm(rm ~ V+ Nb + P + Ni + Cu + V:Cu + Nb:P + Nb:Ni + Nb:Cu + Ni:P,
+            data = carmet415M3_model)
+
+
+summary(fm_lm1)
+```
+
+```{r  cross validation modello}
+
+i <- 1
+f <- function(i){
+  d <- carmet415M3_model[-i,]
+  new_data <- carmet415M3_model[i,c("V","Nb","P","Ni","Cu","rm")]  
+  
+  fm <- lm(rm ~ V+ Nb + P + Ni + Cu + V:Cu + Nb:P + Nb:Ni + Nb:Cu +
+             Ni:P,data = d)
+  
+  prd_data <- predict(fm,newdata = new_data, interval = "prediction")
+  
+  prd_data <- new_data %>% 
+    bind_cols(prd_data) %>% 
+    mutate(me = fit-rm,
+           mae = (fit/rm - 1)*100,
+          mape = abs(mae)
+             ) 
+  
+  
+  prd_data
+}
+
+
+f(1)
+
+prd_data <- purrr::map_df(seq_len(nrow(carmet415M3_model)),f)
+
+ggplot(prd_data)+
+  geom_density(aes(me),alpha=.5,fill="pink")
+
+ggplot(prd_data)+
+  geom_density(aes(mae),alpha=.5,fill="pink")
+
+ggplot(prd_data)+
+  geom_density(aes(mape),alpha=.5,fill="pink")
+
+
+prd_data <- prd_data %>% mutate(position = "ok") %>% 
+  mutate(position = ifelse(rm > upr, "up",position),
+         position = ifelse(rm < lwr, "down", position))
+
+prd_data %>% group_by(position) %>% 
+  summarise(n = n())
+
+prd_data %>% filter(position == "up") 
+
+prd_data %>% arrange(-upr) %>% View()
+
+```
+
+```{r provvisorio}
+
+d <- carmet415M3_model %>% select(V,Nb,P,Ni,Cu,rm)
+
+require(party)
+
+albero <- ctree(rm ~ . , data = d)
+
+plot(albero)
+
+require(partykit)
+
+
+linear_tree <- lmtree(rm ~ V | Nb+P+Cu+Ni, data=d, minsize=20)
+
+plot(linear_tree)
+
+summary(linear_tree,node=6)
+
+```
+
+
