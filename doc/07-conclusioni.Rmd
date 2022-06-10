@@ -1,7 +1,7 @@
 ---
-title: "Progetto"
+title: "COnclusioni "
 subtitle: "cas415"
-author: "anna.savino@cogne.com"
+author: "cscarabelli@cogne.com"
 version: 1.0 
 date: "`r Sys.Date()`"
 output:
@@ -20,7 +20,7 @@ editor_options:
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = FALSE,
+knitr::opts_chunk$set(echo = TRUE,
                       warning = FALSE,
                       message = FALSE,
                       error = FALSE,
@@ -29,46 +29,64 @@ knitr::opts_chunk$set(echo = FALSE,
                       collapse = TRUE,
                       cols.print=20)
 rm(list = ls(all.names = TRUE))
+require(dplyr)
+require(rlang)
+require(kableExtra)
+require(readr)
+require(ggplot2)
+require(reticulate)
+source('~/dev/metalm/R/function.R')
+```
+# conclusioni
+
+Le variabili di processo identificate quali aventi un effetto sulle caratteristiche meccaniche 
+delle barre PEL di 415M3 sono, in ordine di importanza:
+
++ V
++ Nb
++ Ni
++ Cu
++ P
+
+Queste variabili non hanno un effetto indipendente 
+sulla variabile risposta, ma risultano significative anche le interazioni tra gli elementi.
+
+Ad eccezione del Ni, tutte le variabili di input non sono controllabili ad inizio colata e possono soltanto essere misurate a fine colaggio
+ 
+La quantità delle variabili non controllate dipende dalla tipologia e variabilità naturale del rottame caricato in UHP, di per se non controllabile   
+
+L'effetto delle variabili di input viene misurato attraverso i coefficienti di un modello lineare. 
+
+```{r stat_modello}
+
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  -1684.66     583.33  -2.888 0.004063 ** 
+## V              953.81     120.74   7.900 2.15e-14 ***
+## Nb          -44329.14   14888.16  -2.977 0.003063 ** 
+## P           126029.76   25469.04   4.948 1.06e-06 ***
+## Ni             556.75     123.57   4.506 8.44e-06 ***
+## Cu             455.59      90.79   5.018 7.52e-07 ***
+## V:Cu         -2940.82     788.01  -3.732 0.000214 ***
+## Nb:P        389155.71  158275.19   2.459 0.014317 *  
+## Nb:Ni         8690.20    2742.87   3.168 0.001637 ** 
+## Nb:Cu       -21399.23    5901.90  -3.626 0.000321 ***
+## P:Ni        -27523.89    5428.74  -5.070 5.81e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 21.9 on 452 degrees of freedom
+## Multiple R-squared:  0.5532, Adjusted R-squared:  0.5433 
+## F-statistic: 55.96 on 10 and 452 DF,  p-value: < 2.2e-16
 
 ```
 
-# Conclusioni
+Da notare che il modello lineare ha un R2 pari solo al 55%, e di conseguenza questo ha un impatto sulla variabilità delle previsioni di Rm. 
 
-L'obiettivo del progetto consiste:
+Il modello lineare di cui sopra può essere utilizzato per stimare le caratteristiche meccaniche in funzione delle variabili esplicative. 
 
-1. identificare fra le variabili di processo quelle che hanno un impatto significativo sulle caratteristiche meccaniche a trazione delle barre PEL in 415M3.
-
-Le variabili sono:
-  1
-    2
-      3
-
-2. misurare per le variabili di processo significative la misura dell'impatto.
-
-I valori T per le singole variabili sono:
-  1
-    2
-      3
-
-3. costruire un modello che permetta stimare le caratteristische meccaniche in funzione di tale variabile, evidenziandone i limiti  
-
-Spiegare passagio da albero a modello lineare
-
-
-Caratteristiche meccaniche:
-
-+ Rm: carico a rottura [MPa] 
-+ Rp02: carico a snervamento [MPa]
-
-
-
-# Fasi del progetto
-
-+ Data preparation
-+ Data discovery 
-+ Data modeling
-+ Summary
-
+In fase di discussione dei risultati, è stato evidenziato che poter avere a disposizione dei valori, se pur stimati, potrebbe essere utile per indirizzare il trattamento termico a valle del colaggio al fine di cercare di ridurre possibili deviati per caratteristiche meccaniche. 
+Questo dovrebbe essere oggetto di un processo di analisi successiva. 
 
 
 
